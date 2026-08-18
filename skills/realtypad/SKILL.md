@@ -8,7 +8,7 @@ description: >-
 
 # RealtyPad
 
-Convenience plugin: skills here plus MCP tools at `https://app.realtypad.ai/mcp`.
+AgentsPlugin ships these skills plus MCP tools at `https://app.realtypad.ai/mcp`.
 Canonical procedures live on the server. Do not invent a parallel playbook.
 
 ## Session start

@@ -1,14 +1,15 @@
 {
-  "name": "realtypad",
+  "name": "agents-plugin",
   "owner": {
     "name": "RealtyLabs",
     "url": "https://realtypad.ai"
   },
-  "description": "RealtyPad agent plugins for Claude Code",
+  "description": "AgentsPlugin marketplace for Claude Code",
   "version": "0.1.0",
   "plugins": [
     {
-      "name": "realtypad",
+      "name": "agents-plugin",
+      "displayName": "AgentsPlugin",
       "source": "./",
       "description": "RealtyPad skills and MCP tools for ingest, research, triage, scenarios, underwrite, trends, buyers, and distress workflows.",
       "version": "0.1.0",
@@ -17,7 +18,7 @@
         "url": "https://realtypad.ai"
       },
       "homepage": "https://realtypad.ai",
-      "repository": "https://github.com/RealtyLabs/RealtyPadClaudePlugin",
+      "repository": "https://github.com/RealtyLabs/AgentsPlugin",
       "license": "MIT",
       "keywords": [
         "realtypad",

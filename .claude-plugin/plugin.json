@@ -1,5 +1,6 @@
 {
-  "name": "realtypad",
+  "name": "agents-plugin",
+  "displayName": "AgentsPlugin",
   "description": "RealtyPad skills and MCP tools for ingest, research, triage, scenarios, underwrite, trends, buyers, and distress workflows.",
   "version": "0.1.0",
   "author": {
@@ -7,7 +8,7 @@
     "url": "https://realtypad.ai"
   },
   "homepage": "https://realtypad.ai",
-  "repository": "https://github.com/RealtyLabs/RealtyPadClaudePlugin",
+  "repository": "https://github.com/RealtyLabs/AgentsPlugin",
   "license": "MIT",
   "keywords": [
     "realtypad",
