@@ -16,7 +16,7 @@ Auth is browser OAuth in the client. This repo does not ship secrets.
 ### One command (Claude Code, Cursor, Codex, and others)
 
 ```bash
-npx plugins add RealtyLabs/AgentsPlugin
+npx plugins add RealtyPad/AgentsPlugin
 ```
 
 The [plugins CLI](https://github.com/vercel-labs/plugins) detects installed agents and maps this package into each native plugin layout.
@@ -33,7 +33,7 @@ After install, complete OAuth for the RealtyPad MCP server, then ask the agent t
 ### Claude Code
 
 ```text
-/plugin marketplace add RealtyLabs/AgentsPlugin
+/plugin marketplace add RealtyPad/AgentsPlugin
 /plugin install agents-plugin@agents-plugin
 ```
 
