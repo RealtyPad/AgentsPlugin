@@ -1,6 +1,6 @@
 {
-  "name": "agents-plugin",
-  "displayName": "AgentsPlugin",
+  "name": "realtypad",
+  "displayName": "RealtyPad",
   "description": "RealtyPad skills and MCP tools for ingest, research, triage, scenarios, underwrite, trends, buyers, and distress workflows.",
   "version": "0.1.0",
   "author": {

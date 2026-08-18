@@ -2,7 +2,7 @@
 
 Convenience package so Claude, Cursor, and ChatGPT can install RealtyPad **skills** and connect the hosted **MCP** tools in one step.
 
-Machine name is `agents-plugin` (required lowercase by Agent Plugins / Claude / Cursor). Display name is **AgentsPlugin**.
+Plugin id is `realtypad` (lowercase, required by Agent Plugins / Claude / Cursor). In Claude Code that installs as `/plugin install realtypad@realtypad`.
 
 Live operating procedures stay on the server. At session start, agents should call MCP tool `get_agent_manual`. Skills in this repo are install-time triggers and short checklists — not a second playbook.
 
@@ -26,7 +26,7 @@ The [plugins CLI](https://github.com/vercel-labs/plugins) detects installed agen
 This repo is an [Agent Plugin](https://agent-plugins.org/) (`plugin.json` + `mcp.json` + `skills/`) and also includes `.cursor-plugin/plugin.json` for Cursor’s plugin format.
 
 - Marketplace / Customize: add the Git repo once it is listed or linked.
-- Local: clone into `~/.cursor/plugins/local/agents-plugin` (or use `npx plugins add .` from a checkout).
+- Local: clone into `~/.cursor/plugins/local/realtypad` (or use `npx plugins add .` from a checkout).
 
 After install, complete OAuth for the RealtyPad MCP server, then ask the agent to call `list_deals` (limit 3) and `get_agent_manual`.
 
@@ -34,7 +34,7 @@ After install, complete OAuth for the RealtyPad MCP server, then ask the agent t
 
 ```text
 /plugin marketplace add RealtyPad/AgentsPlugin
-/plugin install agents-plugin@agents-plugin
+/plugin install realtypad@realtypad
 ```
 
 Or load a checkout:

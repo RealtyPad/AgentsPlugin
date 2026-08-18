@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "agents-plugin",
+  "name": "realtypad",
   "version": "0.1.0",
   "description": "RealtyPad skills and MCP tools for ingest, research, triage, scenarios, underwrite, trends, buyers, and distress workflows.",
   "author": {
