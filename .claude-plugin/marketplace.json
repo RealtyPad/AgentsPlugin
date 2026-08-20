@@ -11,7 +11,7 @@
       "name": "realtypad",
       "displayName": "RealtyPad",
       "source": "./",
-      "description": "RealtyPad skills and MCP tools for ingest, research, triage, scenarios, underwrite, trends, buyers, and distress workflows.",
+      "description": "RealtyPad skills and MCP tools for ingest, research, triage, scenarios, underwrite, trends, buyers, distress, and CapEx cost-estimate workflows.",
       "version": "0.1.0",
       "author": {
         "name": "RealtyPad",

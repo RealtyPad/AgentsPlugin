@@ -3,7 +3,8 @@ name: realtypad
 description: >-
   Load RealtyPad operating procedures and connect the hosted MCP. Use at session
   start, when the user mentions RealtyPad, deals, underwriting, triage, ingest,
-  buyers, distress, or when MCP tools are available but workflow rules are needed.
+  buyers, distress, CapEx, repairs, or when MCP tools are available but workflow
+  rules are needed.
 ---
 
 # RealtyPad
@@ -17,7 +18,7 @@ Canonical procedures live on the server. Do not invent a parallel playbook.
 2. Call `get_agent_manual` with `workflow` omitted for the full manual.
 3. Before a specific task, call `get_agent_manual` again with that workflow key.
 
-Workflow keys: `ingest`, `research`, `triage`, `scenarios`, `underwrite`, `trends`, `buyers`, `distress`. `investors` is a legacy alias for `buyers`.
+Workflow keys: `ingest`, `research`, `triage`, `scenarios`, `underwrite`, `trends`, `buyers`, `distress`, `cost-estimate`. `investors` → `buyers`; `repairs` / `repair-estimate` → `cost-estimate`.
 
 MCP resources and prompts are optional extras. Many clients cannot read them. Prefer `get_agent_manual`.
 

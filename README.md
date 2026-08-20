@@ -78,6 +78,7 @@ skills/                     Shared Agent Skills
 | `trends` | Catalog / market snapshot refresh |
 | `buyers` | Buyer book, shares, share-thread chat |
 | `distress` | Auction / REO / assign-to-flipper |
+| `cost-estimate` | CapEx / repair BOM (`repairs` alias) |
 
 Canonical workflow text is assembled on the API from HouseMaxxing `api/app/mcp_guides/skills/` and served by `get_agent_manual`. Edit procedures there; keep this plugin’s skills short.
 

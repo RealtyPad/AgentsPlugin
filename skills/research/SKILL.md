@@ -18,6 +18,7 @@ Call `get_agent_manual(workflow="research")` before running this workflow. Follo
 - Never invent ADR/ARV/rent/tax. Skip with `missing_adr` / `missing_arv` / etc. when the source is absent.
 - Refresh stale market trends via the `trends` skill (`refresh_catalog_trends`) before using comps or hold growth.
 - Persist findings: observations, comments, comps, appraisal/tax history, attachment gap-fill.
+- For CapEx / `repair_estimate`, hand off to the `cost-estimate` skill (do not own HD Apify BOM runs here).
 
 ## Typical tools
 
@@ -30,6 +31,7 @@ Research Progress:
 - [ ] Load deal + existing comments/observations
 - [ ] Refresh stale linked-geo trends if needed
 - [ ] Fill tax / HOA / insurance / rent or ADR / ARV from public sources
+- [ ] CapEx via cost-estimate skill when rehab / flip / wholesale needs repairs
 - [ ] Gap-fill photos, lat/lng, listing copy
 - [ ] Persist comps and tax history
 - [ ] Stop. Hand off to scenarios / underwrite / triage
