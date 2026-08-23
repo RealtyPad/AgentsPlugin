@@ -80,7 +80,7 @@ skills/                     Shared Agent Skills
 | `distress` | Auction / REO / assign-to-flipper |
 | `cost-estimate` | CapEx / repair BOM (`repairs` alias) |
 
-Canonical workflow text is assembled on the API from HouseMaxxing `api/app/mcp_guides/skills/` and served by `get_agent_manual`. Edit procedures there; keep this plugin’s skills short.
+Canonical workflow text is assembled on the API from RealtyPad `api/app/mcp_guides/skills/` and served by `get_agent_manual`. Edit procedures there; keep this plugin’s skills short.
 
 ## Local MCP
 
@@ -96,4 +96,4 @@ For operator machines hitting a local API instead of production, override the cl
 }
 ```
 
-Cursor cloud OAuth against localhost often needs `mcp-remote`. See HouseMaxxing `docs/user/cursor-mcp.md`.
+Cursor cloud OAuth against localhost often needs `mcp-remote`. See RealtyPad `docs/user/cursor-mcp.md`.

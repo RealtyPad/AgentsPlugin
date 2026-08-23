@@ -44,6 +44,6 @@ Your workspace is determined entirely by the OAuth session. Claude cannot infer 
 ## Stage and local development
 
 - **Stage MCP:** `https://stage.realtypad.ai/mcp` (same OAuth flow; use only when explicitly testing against stage).
-- **Local API:** override the client MCP URL to `http://localhost:8000/mcp`. Do not commit tokens. Cursor cloud against localhost may need `mcp-remote`; see HouseMaxxing `docs/user/cursor-mcp.md`.
+- **Local API:** override the client MCP URL to `http://localhost:8000/mcp`. Do not commit tokens. Cursor cloud against localhost may need `mcp-remote`; see RealtyPad `docs/user/cursor-mcp.md`.
 
 After any URL override, re-run OAuth if the client prompts for it.
