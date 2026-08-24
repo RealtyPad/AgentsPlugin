@@ -17,7 +17,7 @@ Call `get_agent_manual(workflow="ingest")` before running this workflow. Follow 
 
 - Never invent numbers. Always pass `source_url` and/or `listing_urls` for dedupe.
 - Search cards are not ingest. Open the **listing detail page** (or detail Actor) before calling the sweep done.
-- Pass the **full gallery** as `image_urls` on create (first = primary), plus `latitude`/`longitude` and `listing_description`.
+- Pass the **full gallery** as `image_urls` on create (first = primary), plus `latitude`/`longitude` and `listing_description`. Dedupe reingest attaches photos only when `image_urls` are passed — otherwise expect `photos_missing` after status leaves `new`.
 - Default status for new manual leads is **`new`** (inbox). Leave it unless the user wants `watch` or you are continuing active research (`researching`). Do **not** default ingest to `researching`.
 - Stop after ingest + detail enrich. Research, triage, and underwrite are separate skills.
 - Do not scrape ToS-hostile sites without explicit user approval. Cap spend on paid connectors.

@@ -16,11 +16,12 @@ Call `get_agent_manual(workflow="buyers")` before running this workflow. Follow 
 
 - Buyer rows are **engagement profiles**, not 1:1 with a person.
 - Say “investor” only when `buyer_type=investor`. Matching respects `buyer_type` vs `deal_purpose`.
-- `investors` is a legacy alias for this workflow.
-- Do not invent financing or offer terms. Use `list_financing_profiles` / buyer fields on the record.
+- Prefer `list_buyer_message_threads` for inbox (`list_investor_message_threads` is a legacy alias).
+- `match_buyer_deals` accepts `status` / `needs_input` (same as `list_deals`) and optional `gate_ready_only` (researching + no soft CF gaps + scored).
+- Thesis links: set `scenario_run_id` on match/link so shares freeze that snapshot. Do not invent financing or offer terms.
 
 ## Typical tools
 
-`list_buyers`, `get_buyer`, `create_buyer`, `update_buyer`, `list_deal_buyers`, `link_deal_buyer`, `match_deal_buyers`, `match_buyer_deals`, `unlink_deal_buyer`, `ensure_deal_buyer_share`, `ensure_buyer_share`, `close_buyer`, `reopen_buyer`, `list_investor_message_threads`, `list_deal_buyer_messages`, `add_deal_buyer_message`.
+`list_buyers`, `get_buyer`, `create_buyer`, `update_buyer`, `list_deal_buyers`, `link_deal_buyer`, `match_deal_buyers`, `match_buyer_deals`, `unlink_deal_buyer`, `ensure_deal_buyer_share`, `ensure_buyer_share`, `close_buyer`, `reopen_buyer`, `list_buyer_message_threads`, `list_deal_buyer_messages`, `add_deal_buyer_message`.
 
-Underwrite uses `match_deal_buyers` as the pursue/pass gate after economics clear.
+Underwrite / `advance_deal` use `match_deal_buyers` as the pursue/pass gate after economics clear.

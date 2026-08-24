@@ -14,7 +14,8 @@ Call `get_agent_manual(workflow="cost-estimate")` before running this workflow. 
 ## Hard rules
 
 - Evidence only. Never invent line items. Do not set `ranked` / `passed`.
-- Persist structured CapEx via `add_deal_repair_item(s)` — not markdown BOM tables as source of truth. Writes roll up to `repair_estimate` and set `needs_rehab` when items exist.
+- This skill owns **Acquisition CapEx** (`repair_items` → `repair_estimate` → `cash_in`). Recurring OpEx is separate (`opex_items`). **Never** bump `maintenance_pct` / `insurance_annual` as a CapEx proxy.
+- Persist structured CapEx via `add_deal_repair_item(s)` — not markdown BOM tables as source of truth. When items exist they own the scalar (patches ignored); sets `needs_rehab`.
 - Materials via allowlisted Home Depot Apify Actors; labor via client web search (Angi / Homewyse / Fixr). Cap Apify spend with `maxTotalChargeUsd`.
 - Prefer low confidence until a walkthrough or contractor bid exists.
 

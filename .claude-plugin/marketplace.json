@@ -5,14 +5,14 @@
     "url": "https://realtypad.ai"
   },
   "description": "RealtyPad plugins for Claude Code",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "plugins": [
     {
       "name": "realtypad",
       "displayName": "RealtyPad",
       "source": "./",
       "description": "RealtyPad skills and MCP tools for ingest, research, triage, scenarios, underwrite, trends, buyers, distress, and CapEx cost-estimate workflows.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "RealtyPad",
         "url": "https://realtypad.ai"

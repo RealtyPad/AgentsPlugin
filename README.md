@@ -72,10 +72,10 @@ skills/                     Shared Agent Skills
 | `realtypad` | Session start; load the full manual |
 | `ingest` | Sweeps, scrapes, listing upsert |
 | `research` | Tax/rent/ARV/photos/comps; no ranking |
-| `triage` | Queue batches: new, needs-research, needs-verification, blocked/watch/ranked |
-| `scenarios` | Persist financing × strategy runs |
-| `underwrite` | Verdict, status, buyer-fit gate |
-| `trends` | Catalog / market snapshot refresh |
+| `triage` | Queue batches: new, Blocking/Soft gaps, blocked/watch/ranked |
+| `scenarios` | Persist financing × strategy runs (Preview ≠ thesis) |
+| `underwrite` | Verdict, `advance_deal`, buyer-fit gate |
+| `trends` | `ensure_deal_trends` + catalog refresh |
 | `buyers` | Buyer book, shares, share-thread chat |
 | `distress` | Auction / REO / assign-to-flipper |
 | `cost-estimate` | CapEx / repair BOM (`repairs` alias) |

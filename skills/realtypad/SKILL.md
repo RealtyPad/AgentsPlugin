@@ -25,8 +25,11 @@ MCP resources and prompts are optional extras. Many clients cannot read them. Pr
 ## Hard rules
 
 - Never invent numbers. Null beats fiction. Mark estimates.
-- Pipeline: **ingest (detail page, not search card) → research (+ trends if stale) → triage → scenarios → underwrite**.
-- Deal status: `new` (ingest inbox) → `researching` → `blocked` \| `watch` \| `ranked` \| `passed`. Human escalate `ranked` → `pursuing` → `closed`. Ingest default is **`new`** (not `researching`).
+- Pipeline: **ingest (detail page, not search card) → research (+ `ensure_deal_trends` if stale) → triage → scenarios → underwrite** (prefer `advance_deal` when score-ready).
+- Deal status: `new` → `researching` → `blocked` \| `watch` \| `ranked` \| `passed`. Human escalate `ranked` → `pursuing` → `closed`. Ingest default is **`new`**. `watch` = Hold — no buyers yet.
+- **Writes:** money/research → `update_deal` / money-only `update_deals`. Status + Status note → **`update_deal_status`** (or status-only bulk). Never mix status and money in one call.
+- Score glossary: bare `score` = **Economics**; prefer `score_summary` (`economics` / Data confidence / Growth / **Overall**). Read `data_gaps` before advancing.
+- CapEx (repair items → `cash_in`) ≠ OpEx (`opex_items` → monthly CF). Never bump `maintenance_pct` as a proxy.
 - Do not scrape ToS-hostile sites without explicit user approval.
 - All tools are tenant-scoped after OAuth. Reconnect if you see workspace / `tenant_id_fkey` errors.
 
@@ -41,7 +44,7 @@ Defaults by `income_strategy` (chat override `aggressive|moderate|strict`):
 
 `strict` raises floors (~$200/mo / flip ≥$50k / wholesale ≥$40k).
 
-**Buyer-fit gate:** after economics clear, `match_deal_buyers` decides pursue vs pass — ≥1 match → `ranked`; scanned but none fit → `passed`; empty buyer book → **`watch`**. Hard external gaps → **`blocked`**. Distress: stay `researching`/`blocked` until tax/title/repairs are credible, then apply the gate.
+**Buyer-fit gate:** after economics clear, `match_deal_buyers` — ≥1 match → `ranked`; scanned but none fit → `passed`; empty buyer book → **`watch`**. Hard external gaps → **`blocked`**. Distress: stay `researching`/`blocked` until tax/title/repairs are credible, then apply the gate.
 
 ## Quick enums
 
@@ -49,9 +52,9 @@ Defaults by `income_strategy` (chat override `aggressive|moderate|strict`):
 |-------|--------|
 | `build_type` | `resale` or `new_build` only — omit if unknown |
 | `income_strategy` | `ltr`, `str`, `fix_flip`, `wholesale`; **null** when `deal_purpose=primary` |
-| `deal_purpose` | `investment` (default), `primary`, `either` |
+| `deal_purpose` | `investment` (default), `primary` (owner-occupied), `either` |
 | Deal status | `new`, `researching`, `blocked`, `watch`, `ranked`, `pursuing`, `passed`, `closed` |
 
 Property structure (beds/baths/sqft/year_built/lot_size_acres/address): `update_deal_property`, not `update_deal`.
 
-Prefer bulk writes: `add_manual_leads`, `update_deals`, `add_deal_attachment_urls`, `find_deal_comps`, `add_deal_comps`, `add_deal_appraisal_tax_history` (max 100).
+Prefer bulk writes: `add_manual_leads`, `update_deals` (money-only or status-only — not mixed), `add_deal_attachment_urls`, `find_deal_comps`, `add_deal_comps`, `add_deal_appraisal_tax_history` (max 100).
