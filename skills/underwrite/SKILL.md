@@ -6,7 +6,7 @@ description: >-
   hold growth when multi-geo trends exist, run scenarios for persisted
   scenario runs, set triage status, leave an agent comment. Use when the
   user asks to underwrite, UW, fully underwrite, dig into a deal, or clear
-  a researching lead.
+  a new / researching / blocked lead.
 ---
 
 # RealtyPad — underwrite
@@ -18,9 +18,9 @@ Call `get_agent_manual(workflow="underwrite")` before running this workflow. Fol
 - Never invent numbers. If research is incomplete, run `research` first.
 - When multi-geo trends exist, ask which linked geo feeds the UW worksheet / hold growth.
 - Persist scenarios (`scenarios` skill) before writing a verdict.
-- Buyer-fit gate: `match_deal_buyers` after economics clear. ≥1 match → `ranked`; scanned none → `passed`; empty book → leave `researching`.
-- Distress: stay `researching` until tax/title/repairs are credible, then apply the gate.
-- Write the rationale as an UW comment. Status via `update_deal_status` / `update_deal`. Rescore with `rescore_deal` after input changes.
+- Buyer-fit gate: `match_deal_buyers` after economics clear. ≥1 match → `ranked`; scanned none → `passed`; empty book → **`watch`**. Hard external gaps → **`blocked`**.
+- Distress: stay `researching`/`blocked` until tax/title/repairs are credible, then apply the gate.
+- Pass/Block require a short rationale note. Write the full UW comment too. Status via `update_deal` / `update_deals`. Rescore with `rescore_deal` after input changes.
 
 ## Aggressiveness
 

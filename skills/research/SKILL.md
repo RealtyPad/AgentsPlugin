@@ -4,8 +4,9 @@ description: >-
   Fill verified RealtyPad deal inputs from public sources (tax, HOA,
   insurance, rent/ADR/ARV, listing copy, lat/lng, photos) without ranking or
   scenario judgment; refresh stale market trends when needed. Use when
-  researching a deal, clearing needs-input data gaps, enriching before
-  underwrite/scenarios, or when triage/underwrite needs evidence gathered first.
+  researching a deal, clearing needs_research / needs_input data gaps,
+  enriching before underwrite/scenarios, or when triage/underwrite needs
+  evidence gathered first.
 ---
 
 # RealtyPad — research

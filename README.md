@@ -72,7 +72,7 @@ skills/                     Shared Agent Skills
 | `realtypad` | Session start; load the full manual |
 | `ingest` | Sweeps, scrapes, listing upsert |
 | `research` | Tax/rent/ARV/photos/comps; no ranking |
-| `triage` | Queue batches, needs-input, shortlist |
+| `triage` | Queue batches: new, needs-research, needs-verification, blocked/watch/ranked |
 | `scenarios` | Persist financing × strategy runs |
 | `underwrite` | Verdict, status, buyer-fit gate |
 | `trends` | Catalog / market snapshot refresh |

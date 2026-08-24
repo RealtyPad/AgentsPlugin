@@ -13,11 +13,11 @@ Call `get_agent_manual(workflow="distress")` before running this workflow. Follo
 
 ## Hard rules
 
-- Never invent tax, title, or repairs. Stay `researching` until those are credible, then apply the buyer-fit gate. CapEx → `cost-estimate` skill.
+- Never invent tax, title, or repairs. Stay `researching`/`blocked` until those are credible, then apply the buyer-fit gate. CapEx → `cost-estimate` skill.
 - Ingest from the **detail page**, not the auction search card.
 - Capture `auction_date`, `liens_owed`, starting bid vs ask, and listing URLs. Mark which price is which in notes.
 - Strategy is usually `wholesale` or `fix_flip`. Financing default is `cash_offer`.
-- After economics clear, `match_deal_buyers` decides `ranked` vs `passed`.
+- After economics clear, `match_deal_buyers` decides `ranked` vs `passed` (empty book → `watch`). Hard external gaps → `blocked`.
 
 ## Flow
 
