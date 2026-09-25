@@ -75,12 +75,12 @@ skills/                     Shared Agent Skills
 | `triage` | Queue batches: new, Blocking/Soft gaps, blocked/watch/ranked |
 | `scenarios` | Persist financing × strategy runs (Preview ≠ thesis) |
 | `underwrite` | Verdict, `advance_deal`, buyer-fit gate |
-| `trends` | `ensure_deal_trends` + catalog refresh |
+| `trends` | `ensure_geo_markets` + `refresh_deal_trends(gap_fill=true)`; surgical catalog refresh |
 | `buyers` | Buyer book, shares, share-thread chat |
 | `distress` | Auction / REO / assign-to-flipper |
 | `cost-estimate` | CapEx / repair BOM (`repairs` alias) |
 
-Canonical workflow text is assembled on the API from RealtyPad `api/app/mcp_guides/skills/` and served by `get_agent_manual`. Edit procedures there; keep this plugin’s skills short.
+Canonical workflow text is assembled on the API from RealtyPad `docs/user/agents/` (playbooks under `workflows/`) and served by `get_agent_manual`. Edit procedures there; keep this plugin’s skills short.
 
 ## Local MCP
 

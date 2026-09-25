@@ -19,7 +19,7 @@ Call `get_agent_manual(workflow="triage")` before running this workflow. Follow 
 - Prefer evidence over Economics alone. Bare `score` = Economics; prefer `score_summary` + `data_gaps`.
 - Any `data_gaps` entry with `blocking: true` means do not advance to score/UW. Prefer `has_blocking_gap=true` / `has_gap=<code>`.
 - Fill gaps with the `research` skill before judging keepers. Hard external gaps → `blocked`.
-- Regional/cluster: refresh once via `trends` (`ensure_deal_trends` per deal).
+- Regional/cluster: refresh once via `trends` (`refresh_deal_trends(gap_fill=true)` per deal).
 - Individual verdicts: `underwrite` (prefer `advance_deal` when score-ready). Pattern-pass only when the failure mode is documented.
 - Status / Status note via **`update_deal_status`** (single) or status+rationale-only **`update_deals`** — never mix money fields in the same call.
 - Read comments + open `action_needed` handoffs before flipping a previously researched deal.
