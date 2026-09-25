@@ -17,7 +17,7 @@ Call `get_agent_manual(workflow="underwrite")` before running this workflow. Fol
 
 - Never invent numbers. If research is incomplete (blocking `data_gaps`), run `research` first.
 - Prefer **`advance_deal(dry_run=true)`** then `dry_run=false` when score-ready. Stops without write on blocking gaps, `deal_purpose=primary`, auction (`needs_distress_review`), or multi-geo without `primary_geography_level`.
-- When multi-geo trends exist, ask which linked geo feeds the UW worksheet / hold growth. Prefer `ensure_deal_trends` for freshness.
+- When multi-geo trends exist, ask which linked geo feeds the UW worksheet / hold growth. Prefer `refresh_deal_trends(gap_fill=true)` for freshness.
 - CapEx = repair items → `cash_in`. OpEx = `opex_items` → monthly CF. **Never** bump `maintenance_pct` / `insurance_annual` as a CapEx/OpEx proxy.
 - Buyer-fit gate: ≥1 match → `ranked`; scanned none → `passed`; empty book → **`watch`** (Hold — no buyers yet). Hard external gaps → **`blocked`**.
 - Distress: stay `researching`/`blocked` until tax/title/repairs are credible, then apply the gate.
@@ -37,7 +37,7 @@ Call `get_agent_manual(workflow="underwrite")` before running this workflow. Fol
 ```
 Underwrite Progress:
 - [ ] get_deal + comments / action_needed + data_gaps
-- [ ] Trends geo choice if multiple linked geos (ensure_deal_trends)
+- [ ] Trends geo choice if multiple linked geos (refresh_deal_trends gap_fill)
 - [ ] Prefer advance_deal(dry_run=true) → review → dry_run=false
 - [ ] Else: scenarios persist + select → match_deal_buyers
 - [ ] Status note (update_deal_status) + UW comment (unless advance_deal wrote)

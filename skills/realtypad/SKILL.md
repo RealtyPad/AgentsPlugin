@@ -18,14 +18,14 @@ Canonical procedures live on the server. Do not invent a parallel playbook.
 2. Call `get_agent_manual` with `workflow` omitted for the full manual.
 3. Before a specific task, call `get_agent_manual` again with that workflow key.
 
-Workflow keys: `ingest`, `research`, `triage`, `scenarios`, `underwrite`, `trends`, `buyers`, `distress`, `cost-estimate`. `investors` → `buyers`; `repairs` / `repair-estimate` → `cost-estimate`.
+Workflow keys: `ingest`, `research`, `triage`, `scenarios`, `underwrite`, `trends`, `buyers`, `distress`, `cost-estimate`, `opex`, `growth-drivers`, `data-sources`, `redevelopment`. Aliases: `investors` → `buyers`; `repairs` / `repair-estimate` → `cost-estimate`; `monthly-costs` / `operating-expenses` → `opex`; `redevelop` / `land` → `redevelopment`. The `get_agent_manual` response lists `allowed_workflows` — trust it over this list.
 
 MCP resources and prompts are optional extras. Many clients cannot read them. Prefer `get_agent_manual`.
 
 ## Hard rules
 
 - Never invent numbers. Null beats fiction. Mark estimates.
-- Pipeline: **ingest (detail page, not search card) → research (+ `ensure_deal_trends` if stale) → triage → scenarios → underwrite** (prefer `advance_deal` when score-ready).
+- Pipeline: **ingest (detail page, not search card) → research (+ `refresh_deal_trends(gap_fill=true)` if stale) → triage → scenarios → underwrite** (prefer `advance_deal` when score-ready).
 - Deal status: `new` → `researching` → `blocked` \| `watch` \| `ranked` \| `passed`. Human escalate `ranked` → `pursuing` → `closed`. Ingest default is **`new`**. `watch` = Hold — no buyers yet.
 - **Writes:** money/research → `update_deal` / money-only `update_deals`. Status + Status note → **`update_deal_status`** (or status-only bulk). Never mix status and money in one call.
 - Score glossary: bare `score` = **Economics**; prefer `score_summary` (`economics` / Data confidence / Growth / **Overall**). Read `data_gaps` before advancing.
