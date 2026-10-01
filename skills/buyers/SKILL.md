@@ -17,7 +17,7 @@ Call `get_agent_manual(workflow="buyers")` before running this workflow. Follow 
 - Buyer rows are **engagement profiles**, not 1:1 with a person.
 - Say “investor” only when `buyer_type=investor`. Matching respects `buyer_type` vs `deal_purpose`.
 - Use `list_buyer_message_threads` for the inbox.
-- `match_buyer_deals` accepts `status` / `needs_input` (same as `list_deals`) and optional `gate_ready_only` (researching + no soft CF gaps + scored).
+- `match_buyer_deals` accepts `status` / `has_soft_gap` (same as `list_deals`) and optional `gate_ready_only` (researching + no soft CF gaps + scored).
 - Thesis links: set `scenario_run_id` on match/link so shares freeze that snapshot. Do not invent financing or offer terms.
 
 ## Typical tools

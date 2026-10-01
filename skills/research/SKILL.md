@@ -24,7 +24,7 @@ Call `get_agent_manual(workflow="research")` before running this workflow. Follo
 
 ## Typical tools
 
-`get_deal`, `update_deal`, `update_deal_property`, `ensure_geo_markets`, `refresh_deal_trends`, `add_comment`, `add_observation` (`action_needed` only), `list_deal_comps`, `find_deal_comps`, `add_deal_comps`, `list_deal_appraisal_tax`, `add_deal_appraisal_tax`, `add_deal_appraisal_tax_history`, `list_deal_attachments`, `add_deal_attachment_urls`, `add_deal_opex_items`.
+`get_deal`, `update_deal`, `update_deal_property`, `ensure_geo_markets`, `refresh_deal_trends`, `add_comment`, `add_observation` (`action_needed` only), `list_deal_comps`, `add_deal_comps` (comps you gathered via listing connectors; `airroi_listings_comparables` for STR), `screen_deal_comps`, `list_deal_appraisal_tax`, `add_deal_appraisal_tax`, `add_deal_appraisal_tax_history`, `list_deal_attachments`, `add_deal_attachment_urls`, `add_deal_opex_items`.
 
 ## Checklist
 

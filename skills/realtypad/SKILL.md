@@ -57,4 +57,4 @@ Defaults by `income_strategy` (chat override `aggressive|moderate|strict`):
 
 Property structure (beds/baths/sqft/year_built/lot_size_acres/address): `update_deal_property`, not `update_deal`.
 
-Prefer bulk writes: `add_manual_leads`, `update_deals` (money-only or status-only — not mixed), `add_deal_attachment_urls`, `find_deal_comps`, `add_deal_comps`, `add_deal_appraisal_tax_history` (max 100).
+Prefer bulk writes: `add_manual_leads`, `update_deals` (money-only or status-only — not mixed), `add_deal_attachment_urls`, `add_deal_comps`, `add_deal_appraisal_tax_history` (max 100).

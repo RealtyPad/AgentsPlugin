@@ -30,7 +30,7 @@ Match UI `/triage` (labels: New, **Blocking gaps**, **Soft gaps**, …):
 
 - **new** (default inbox): `list_deals(status="new")` — start → `researching`, or pass / block.
 - **Blocking gaps** (mode id `needs_research`): `list_deals(status="new,researching", has_blocking_gap=true)` — photos / rent / ADR / ARV / unscored. Or `has_gap="photos"`.
-- **Soft gaps** (mode id `needs_verification`): `list_deals(needs_input=true)` or per-code `has_gap="tax_estimated"` — estimated tax/insurance, rent capped, `repairs_unknown`.
+- **Soft gaps** (mode id `needs_verification`): `list_deals(has_soft_gap=true)` or per-code `has_gap="tax_estimated"` — estimated tax/insurance, rent capped, `repairs_unknown`.
 - **blocked / watch / ranked / pursuing**: `list_deals(status=…)`.
 - **cluster**: same market/builder/pattern; refresh trends once, then batch.
 
