@@ -4,7 +4,7 @@ Convenience package so Claude, Cursor, and ChatGPT can install RealtyPad **skill
 
 Plugin id is `realtypad` (lowercase, required by Agent Plugins / Claude / Cursor). In Claude Code that installs as `/plugin install realtypad@realtypad`.
 
-Live operating procedures stay on the server. At session start, agents should call MCP tool `get_agent_manual`. Skills in this repo are install-time triggers and short checklists — not a second playbook.
+**This repo is the source of truth for RealtyPad agent playbooks.** Each workflow is a full [Agent Skill](https://agentskills.io/): `SKILL.md` holds the procedure and hard rules, and long detail lives in that skill's `references/`. The same files serve external agents (Claude, Cursor, ChatGPT/Codex) and RealtyPad's hosted automation worker. RealtyPad docs (`search_docs` / `read_doc` on the MCP) are supplementary reference, not a second playbook.
 
 MCP URL (no trailing slash): `https://app.realtypad.ai/mcp`  
 Stage: `https://stage.realtypad.ai/mcp`
@@ -28,7 +28,7 @@ This repo is an [Agent Plugin](https://agent-plugins.org/) (`plugin.json` + `mcp
 - Marketplace / Customize: add the Git repo once it is listed or linked.
 - Local: clone into `~/.cursor/plugins/local/realtypad` (or use `npx plugins add .` from a checkout).
 
-After install, complete OAuth for the RealtyPad MCP server, then ask the agent to call `list_deals` (limit 3) and `get_agent_manual`.
+After install, complete OAuth for the RealtyPad MCP server, then ask the agent to call `list_deals` (limit 3) and load the `realtypad` skill.
 
 ### Claude Code
 
@@ -51,7 +51,7 @@ ChatGPT needs the **public HTTPS** MCP URL. Localhost will not work.
 
 **Connector (works today):** Settings → Apps → Developer mode → add connector → `https://app.realtypad.ai/mcp` → OAuth.
 
-**Plugin (skills + MCP together):** this package also has `.codex-plugin/plugin.json` for ChatGPT/Codex. Public directory listing is review-gated; until then, use the connector and rely on `get_agent_manual` plus these skills if the plugin is installed from a local/workspace source.
+**Plugin (skills + MCP together):** this package also has `.codex-plugin/plugin.json` for ChatGPT/Codex. Public directory listing is review-gated; until then, use the connector plus these skills if the plugin is installed from a local/workspace source.
 
 ## Layout
 
@@ -69,18 +69,23 @@ skills/                     Shared Agent Skills
 
 | Skill | When |
 |-------|------|
-| `realtypad` | Session start; load the full manual |
-| `ingest` | Sweeps, scrapes, listing upsert |
-| `research` | Tax/rent/ARV/photos/comps; no ranking |
+| `realtypad` | Session start: mission, pipeline, status tree, write rules, skill index; `references/glossary.md` |
+| `ingest` | Sweeps, scrapes, listing upsert; `references/data-sources.md` + per-portal recipes |
+| `research` | Tax/rent/ARV/photos/comps/listing history; no ranking |
+| `growth-drivers` | Qualitative demand signals (employers, transit, rezoning) → Drivers |
 | `triage` | Queue batches: new, Blocking/Soft gaps, blocked/watch/ranked |
 | `scenarios` | Persist financing × strategy runs (Preview ≠ thesis) |
 | `underwrite` | Verdict, `advance_deal`, buyer-fit gate |
 | `trends` | `ensure_geo_markets` + `refresh_deal_trends(gap_fill=true)`; surgical catalog refresh |
 | `buyers` | Buyer book, shares, share-thread chat |
 | `distress` | Auction / REO / assign-to-flipper |
-| `cost-estimate` | CapEx / repair BOM (`repairs` alias) |
+| `redevelopment` | Land / tear-down / densification residual |
+| `cost-estimate` | CapEx / Fix-up costs (repair items) |
+| `opex` | OpEx / Monthly costs (opex items) |
 
-Canonical workflow text is assembled on the API from RealtyPad `docs/user/agents/` (playbooks under `workflows/`) and served by `get_agent_manual`. Edit procedures there; keep this plugin’s skills short.
+### Editing playbooks
+
+Edit procedures here, not in RealtyPad `docs/user/agents/`. Keep content model-neutral (the hosted worker is not Claude) and keep each `SKILL.md` under ~500 lines — move long detail into `references/`. Cross-skill links use relative paths (`../ingest/references/data-sources/zillow.md`). RealtyPad's API pins this repo by release tag, so a playbook change reaches hosted automation only after a tag and a pin bump.
 
 ## Local MCP
 

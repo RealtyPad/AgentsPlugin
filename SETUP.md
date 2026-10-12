@@ -28,7 +28,7 @@ This plugin connects Claude to RealtyPad's hosted MCP server at `https://app.rea
 Ask Claude to:
 
 1. Call `list_deals` with `limit: 3` — confirms MCP connectivity and returns deals for your tenant.
-2. Call `get_agent_manual` — loads the full operating manual from the server.
+2. Load the `realtypad` skill — the operating manual and skill index ship with this plugin.
 
 If either call fails with auth or workspace errors, reconnect (below) before running ingest, research, triage, or underwrite workflows.
 
