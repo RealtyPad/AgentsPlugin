@@ -2,12 +2,13 @@
   "name": "realtypad",
   "displayName": "RealtyPad",
   "description": "RealtyPad skills and MCP tools for ingest, research, growth drivers, triage, scenarios, underwrite, trends, buyers, distress, redevelopment, CapEx cost-estimate, and OpEx workflows.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": {
     "name": "RealtyPad",
     "url": "https://realtypad.ai"
   },
   "homepage": "https://realtypad.ai",
+  "privacyPolicyUrl": "https://app.realtypad.ai/policy/privacy",
   "repository": "https://github.com/RealtyPad/AgentsPlugin",
   "license": "MIT",
   "keywords": [
