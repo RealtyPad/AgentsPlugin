@@ -18,5 +18,10 @@
     "investing"
   ],
   "skills": "./skills",
-  "mcpServers": "./.mcp.json"
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "RealtyPad",
+    "composerIcon": "./assets/realtypad-logo.png",
+    "logo": "./assets/realtypad-logo.png"
+  }
 }

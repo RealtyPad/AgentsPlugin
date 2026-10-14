@@ -16,5 +16,6 @@
     "mcp",
     "underwriting",
     "investing"
-  ]
+  ],
+  "icon": "./assets/realtypad-logo.png"
 }
