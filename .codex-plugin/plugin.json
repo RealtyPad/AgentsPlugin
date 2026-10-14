@@ -1,7 +1,7 @@
 {
   "name": "realtypad",
   "displayName": "RealtyPad",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "RealtyPad skills and MCP tools for ingest, research, growth drivers, triage, scenarios, underwrite, trends, buyers, distress, redevelopment, CapEx cost-estimate, and OpEx workflows.",
   "author": {
     "name": "RealtyPad",
