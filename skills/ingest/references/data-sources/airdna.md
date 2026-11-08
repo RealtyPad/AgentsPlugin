@@ -26,7 +26,7 @@ Optional `source=airdna` on comps; not a sale `lead_source_code`.
 
 ## Gotchas
 
-- Prefer platform-configured Actor secrets (`AIRDNA_*`). Do **not** put email/password/bearer in tool args unless a workspace admin explicitly asks.
+- Prefer the server's configured Apify/AirDNA integration. Do **not** put email/password/bearer in tool args unless a workspace admin explicitly asks.
 - If the run fails on auth/rental/permissions, stop and tell the user — do not switch to another Actor.
 - Prefer AirROI listings, [VRBO](vrbo.md) geo, or web STR comps as market finders. **Booking.com is not allowlisted.**
 - Never invent ADR/occ.
