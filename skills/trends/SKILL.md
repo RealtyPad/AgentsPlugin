@@ -165,7 +165,7 @@ split tools above.
 | Permits | `census_bps` | county/msa/state |
 | Jobs | `bls_laus` | county/msa/state (live API via gap_fill) |
 | Population | `census_pop` | county/msa/state (PEP) **+ zip (ACS ZCTA)** |
-| Rental vacancy | `census_acs_vacancy` | county/msa **+ zip (ZCTA)**; needs Census API key |
+| Rental vacancy | `census_acs_vacancy` | county/msa **+ zip (ZCTA)**; needs the server's Census integration |
 | STR | `airroi` | gap_fill / `refresh_airroi_trends(deal_id=…)` → zip/neighborhood/city/county (≤60 mo; not state/msa) |
 | Custom override | same source code | Tenant upsert (wins on merge) |
 
