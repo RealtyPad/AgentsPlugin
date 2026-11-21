@@ -6,8 +6,8 @@ Plugin id is `realtypad` (lowercase, required by Agent Plugins / Claude / Cursor
 
 **This repo is the source of truth for RealtyPad agent playbooks.** Each workflow is a full [Agent Skill](https://agentskills.io/): `SKILL.md` holds the procedure and hard rules, and long detail lives in that skill's `references/`. The same files serve external agents (Claude, Cursor, ChatGPT/Codex) and RealtyPad's hosted automation worker. RealtyPad docs (docs.realtypad.ai) are supplementary reference, not a second playbook.
 
-MCP URL (no trailing slash): `https://app.realtypad.ai/mcp`  
-Stage: `https://stage.realtypad.ai/mcp`
+MCP URL (no trailing slash): `https://mcp.realtypad.ai/v2`  
+Stage: `https://mcp-stage.realtypad.ai/v2`
 
 Auth is browser OAuth in the client. This repo does not ship secrets.
 
@@ -49,7 +49,7 @@ Claude Code reads `.claude-plugin/plugin.json` and `.mcp.json`. Same skills fold
 
 ChatGPT needs the **public HTTPS** MCP URL. Localhost will not work.
 
-**Connector (works today):** Settings → Apps → Developer mode → add connector → `https://app.realtypad.ai/mcp` → OAuth.
+**Connector (works today):** Settings → Apps → Developer mode → add connector → `https://mcp.realtypad.ai/v2` → OAuth.
 
 **Plugin (skills + MCP together):** this package also has `.codex-plugin/plugin.json` for ChatGPT/Codex. Public directory listing is review-gated; until then, use the connector plus these skills if the plugin is installed from a local/workspace source.
 
@@ -95,7 +95,7 @@ For operator machines hitting a local API instead of production, override the cl
 {
   "mcpServers": {
     "realtypad": {
-      "url": "http://localhost:8000/mcp"
+      "url": "http://localhost:8000/v2"
     }
   }
 }

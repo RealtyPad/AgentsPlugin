@@ -2,7 +2,12 @@
 
 ## 0.3.0
 
-Skills move to the RealtyPad MCP v2 tool surface (ADR-0011, epic DEV-758; issue DEV-768). Use this release with the v2 connector. v1 tool names no longer appear in any skill.
+Skills move to the RealtyPad MCP v2 tool surface (ADR-0011, epic DEV-758; issue DEV-768). v1 tool names no longer appear in any skill.
+
+### Connector now points to v2
+
+- `.mcp.json`, `mcp.json`, README and SETUP now use `https://mcp.realtypad.ai/v2` (stage `https://mcp-stage.realtypad.ai/v2`, local `http://localhost:8000/v2`). The URL changes in this release (it was `https://app.realtypad.ai/mcp`).
+- Re-authenticate after updating: OAuth is bound to the resource on v2 (DEV-777), so a v1 token does not work.
 
 ### Why a minor bump
 

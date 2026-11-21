@@ -2,7 +2,7 @@
   "mcpServers": {
     "realtypad": {
       "type": "http",
-      "url": "https://app.realtypad.ai/mcp"
+      "url": "https://mcp.realtypad.ai/v2"
     }
   }
 }

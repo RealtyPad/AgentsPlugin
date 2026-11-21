@@ -19,7 +19,7 @@ Operating index for RealtyPad MCP agents. Load **one** workflow skill at a time,
 3. **Terms** — status, scores, CapEx/OpEx, scenarios, buyer-fit: [glossary](references/glossary.md).
 4. **Sources** — listing portals are the `source` parameter of `utility_listing_search`; the table is in the **`import`** skill. There are no per-portal recipes.
 
-Supplementary reference: the RealtyPad docs site (docs.realtypad.ai) covers product concepts and human-facing pages. The skills are the source of truth for procedures; use docs for background, not as a second playbook.
+For product how-to questions, use the `doc_search` / `doc_read` tools. Supplementary reference: the RealtyPad docs site (docs.realtypad.ai) covers product concepts and human-facing pages. The skills are the source of truth for procedures; use docs for background, not as a second playbook.
 
 **Rule of thumb:** pick the matching skill → follow that checklist. Do not improvise past the playbook.
 
@@ -102,8 +102,8 @@ Session override **`strict`** (“be conservative”): LTR/STR fallback CF ≳ *
 
 ## Auth / tenancy
 
-- Production MCP: `https://app.realtypad.ai/mcp`
-- Stage MCP: `https://stage.realtypad.ai/mcp`
+- Production MCP (v2): `https://mcp.realtypad.ai/v2`
+- Stage MCP: `https://mcp-stage.realtypad.ai/v2`
 - Reconnect OAuth if you see workspace / `tenant_id_fkey` errors.
 - All tools are tenant-scoped after Bearer OAuth.
 - Never invent ADR/ARV/rent — skip with `missing_adr` / `missing_arv` / etc.

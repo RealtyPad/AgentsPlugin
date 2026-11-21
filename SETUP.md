@@ -1,11 +1,11 @@
 # Setup
 
-This plugin connects Claude to RealtyPad's hosted MCP server at `https://app.realtypad.ai/mcp`. Authentication is OAuth in the client; this repo ships no credentials, tokens, or headers.
+This plugin connects Claude to RealtyPad's hosted MCP server at `https://mcp.realtypad.ai/v2`. Authentication is OAuth in the client; this repo ships no credentials, tokens, or headers.
 
 ## Prerequisites
 
 - A RealtyPad account (sign up at [realtypad.ai](https://realtypad.ai) if needed).
-- Claude Code or Cowork with plugin support. For Claude Chat alone, add the MCP connector directly: Settings → Apps → Developer mode → `https://app.realtypad.ai/mcp`.
+- Claude Code or Cowork with plugin support. For Claude Chat alone, add the MCP connector directly: Settings → Apps → Developer mode → `https://mcp.realtypad.ai/v2`.
 
 ## Claude Code
 
@@ -43,7 +43,7 @@ Your workspace is determined entirely by the OAuth session. Claude cannot infer 
 
 ## Stage and local development
 
-- **Stage MCP:** `https://stage.realtypad.ai/mcp` (same OAuth flow; use only when explicitly testing against stage).
-- **Local API:** override the client MCP URL to `http://localhost:8000/mcp`. Do not commit tokens. Cursor cloud against localhost may need `mcp-remote`; see RealtyPad `docs/user/cursor-mcp.md`.
+- **Stage MCP:** `https://mcp-stage.realtypad.ai/v2` (same OAuth flow; use only when explicitly testing against stage).
+- **Local API:** override the client MCP URL to `http://localhost:8000/v2`. Do not commit tokens. Cursor cloud against localhost may need `mcp-remote`; see RealtyPad `docs/user/cursor-mcp.md`.
 
 After any URL override, re-run OAuth if the client prompts for it.
