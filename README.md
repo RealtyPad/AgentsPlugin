@@ -28,7 +28,7 @@ This repo is an [Agent Plugin](https://agent-plugins.org/) (`plugin.json` + `mcp
 - Marketplace / Customize: add the Git repo once it is listed or linked.
 - Local: clone into `~/.cursor/plugins/local/realtypad` (or use `npx plugins add .` from a checkout).
 
-After install, complete OAuth for the RealtyPad MCP server, then ask the agent to call `list_deals` (limit 3) and load the `realtypad` skill.
+After install, complete OAuth for the RealtyPad MCP server, then ask the agent to call `deal_list` (limit 3) and load the `realtypad` skill.
 
 ### Claude Code
 
@@ -70,13 +70,13 @@ skills/                     Shared Agent Skills
 | Skill | When |
 |-------|------|
 | `realtypad` | Session start: mission, pipeline, status tree, write rules, skill index; `references/glossary.md` |
-| `ingest` | Sweeps, scrapes, listing upsert; `references/data-sources.md` + per-portal recipes |
+| `import` | Listing sweeps: `utility_listing_search` → `deal_import` by `source_id`; sources and filters; enrich check |
 | `research` | Tax/rent/ARV/photos/comps/listing history; no ranking |
 | `growth-drivers` | Qualitative demand signals (employers, transit, rezoning) → Drivers |
 | `triage` | Queue batches: new, Blocking/Soft gaps, blocked/watch/ranked |
 | `scenarios` | Persist financing × strategy runs (Preview ≠ thesis) |
-| `underwrite` | Verdict, `advance_deal`, buyer-fit gate |
-| `trends` | `ensure_geo_markets` + `refresh_deal_trends(gap_fill=true)`; surgical catalog refresh |
+| `underwrite` | Verdict, `deal_advance`, buyer-fit gate |
+| `trends` | `market_ensure`, `trend_get`, `trend_refresh` (gap fill); overrides |
 | `buyers` | Buyer book, shares, share-thread chat |
 | `distress` | Auction / REO / assign-to-flipper |
 | `redevelopment` | Land / tear-down / densification residual |
@@ -85,7 +85,7 @@ skills/                     Shared Agent Skills
 
 ### Editing playbooks
 
-Edit procedures here, not in RealtyPad `docs/user/agents/`. Keep content model-neutral (the hosted worker is not Claude) and keep each `SKILL.md` under ~500 lines — move long detail into `references/`. Cross-skill links use relative paths (`../ingest/references/data-sources/zillow.md`). RealtyPad's API pins this repo by release tag, so a playbook change reaches hosted automation only after a tag and a pin bump.
+Edit procedures here, not in RealtyPad `docs/user/agents/`. Keep content model-neutral (the hosted worker is not Claude) and keep each `SKILL.md` under ~500 lines — move long detail into `references/`. Cross-skill links use relative paths (`../import/SKILL.md`). RealtyPad's API pins this repo by release tag, so a playbook change reaches hosted automation only after a tag and a pin bump.
 
 ## Local MCP
 

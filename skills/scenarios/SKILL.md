@@ -14,7 +14,7 @@ description: >-
 
 - **Never invent numbers.** Prefer null over fiction. Mark estimates in comments / `raw`.
 - **Do not** auto-persist every rescore — only create/fork runs when scanning intentionally.
-- Read existing runs (`list_scenario_runs`) before forking a near-duplicate.
+- Read existing runs (`scenario_get`) before forking a near-duplicate.
 - **Do not** set triage verdict (`ranked` / `passed`) — that is the **`underwrite`** skill / the **`triage`** skill.
 - Apply only when promoting a decision onto the deal; exploratory scans stay `draft` / unapplied.
 
@@ -23,10 +23,10 @@ description: >-
 | Surface | Job | Agents / UI |
 |---------|-----|-------------|
 | `raw.scenario_metrics` | Slim focus×profile rescore cache | Feeds list/detail strategy chips via `scenario_metrics` / `intent_score_summary` — **ignore for UW decisions** |
-| `cashflow_scenarios` | Form-aware matrix dry-run | **Preview only** — never UW verdict / buyer thesis |
+| `scenario_run(dry_run=true)` | Form-aware matrix dry-run (saves nothing) | **Preview only** — never UW verdict / buyer thesis |
 | `scenario_runs` | Durable scan + select/apply | **Only** decision path; applied run = `deals.selected_scenario_run_id` |
 
-UI **Preview** tab calls dry-run with form overrides — that is **not** the rescore cache. Overview / Buyers default to the applied run when set. `match_deal_buyers` still scores live UW + every run with a selected cell (multi-thesis); apply is optional for matching.
+UI **Preview** tab calls dry-run with form overrides — that is **not** the rescore cache. Overview / Buyers default to the applied run when set. `buyer_match` still scores live UW + every run with a selected cell (multi-thesis); apply is optional for matching.
 
 ## Owns vs does not
 
@@ -35,31 +35,31 @@ UI **Preview** tab calls dry-run with form overrides — that is **not** the res
 | Create / fork / select / apply scenario runs | Tax/HOA/rent evidence (the **`research`** skill) |
 | Matrix interpretation for sensitivity | Status rubric / aggressiveness |
 | Bid / purchase / rent override variations | Pattern-pass clusters (triage) |
-| Linking UW comments to `scenario_run_id` | Dry-run-only `cashflow_scenarios` (Preview only) |
+| Linking UW comments to `scenario_run_id` | Dry-run-only `scenario_run(dry_run=true)` (Preview only) |
 | **Selected cells as buyer-match theses** (no apply required) | Buyer messaging (the **`buyers`** skill) |
 
 ## Pipeline
 
 ```
-research → scenarios (this workflow) → underwrite (verdict + status + match_deal_buyers)
+research → scenarios (this workflow) → underwrite (verdict + status + buyer_match)
 ```
 
 Underwrite **delegates** matrix work here. Scenario-only passes (sensitivity, bid grid) stop after select or a brief — no status flip unless the user asks for full UW.
 
-**Buyer matching:** `select_scenario_run` creates a durable thesis that `match_deal_buyers` scores without applying onto the deal. **`advance_deal`** is buyer-first: it matches economically viable grid cells against the buyer book, then selects the best-Economics matching cell (and may freeze alternate draft theses when linking buyers whose best cell differs). Manual path: prefer selecting (and labeling) pursue bids before the buyer-fit gate; `link_matches` stores `deal_buyers.scenario_run_id`. Apply only when promoting the workspace live UW / Overview default.
+**Buyer matching:** `scenario_select` creates a durable thesis that `buyer_match` scores without applying onto the deal. **`deal_advance`** is buyer-first: it matches economically viable grid cells against the buyer book, then selects the best-Economics matching cell (and may freeze alternate draft theses when linking buyers whose best cell differs). Manual path: prefer selecting (and labeling) pursue bids before the buyer-fit gate; `link_matches` stores `deal_buyers.scenario_run_id`. Apply only when promoting the workspace live UW / Overview default.
 
 ## Checklist
 
 ```
 Scenario Progress:
-- [ ] 1. Load deal (`get_deal` core) + list_scenario_runs; `list_comments` if revisiting
+- [ ] 1. Load deal (`deal_get` core) + scenario_get; `comment_list` if revisiting
 - [ ] 2. If needs_input / missing money fields → the **`research`** skill first
-- [ ] 3. create_scenario_run (label e.g. "baseline ask") — or fork an existing run
+- [ ] 3. `scenario_run(deal_id, runs=[{label: "baseline ask"}])` — or set `fork_from_run_id` on a run to start from an existing one
 - [ ] 4. Review top ok cells (score / CF / spread by strategy × profile)
-- [ ] 5. Optional: fork_scenario_run with purchase_price / rent / ADR overrides
-- [ ] 6. select_scenario_run (income_strategy + financing_profile_id)
-- [ ] 7. apply_scenario_run only when promoting settings onto the deal
-- [ ] 8. add_comment with scenario_run_id + selected strategy/profile (if UW or user wants a note)
+- [ ] 5. Optional: more objects in `runs` (or a fork) with purchase_price / rent / ADR overrides; several variations go in one call
+- [ ] 6. `scenario_select(deal_id, run_id, income_strategy, financing_profile_id)`
+- [ ] 7. `scenario_apply(deal_id, run_id)` only when promoting settings onto the deal
+- [ ] 8. comment_create with scenario_run_id + selected strategy/profile (if UW or user wants a note)
 ```
 
 ## MCP tools
@@ -68,16 +68,16 @@ RealtyPad MCP tools (REST under `/api/deals/{id}/scenario-runs` on the hosted AP
 
 | Step | Tool |
 |------|------|
-| Load | `get_deal` (core), `list_scenario_runs`, `get_scenario_run` |
-| Scan | `create_scenario_run` (optional money overrides + `strategies`) |
-| Variation | `fork_scenario_run` (merges overrides onto parent) |
-| Choose | `select_scenario_run` |
-| Promote | `apply_scenario_run` → patches strategy + profile + overrides, rescored |
-| Preview only | `cashflow_scenarios` — dry-run / UI Preview tab; **never** for UW verdict or buyer thesis |
+| Load | `deal_get` (core), `scenario_get` (`run_id` optional: without it, the deal's runs) |
+| Scan | `scenario_run(deal_id, runs[])`: each run takes optional money overrides + `strategies` (max 20 runs per call) |
+| Variation | `scenario_run` with `fork_from_run_id` (merges overrides onto the parent) |
+| Choose | `scenario_select` |
+| Promote | `scenario_apply` → patches strategy + profile + overrides, rescored |
+| Preview only | `scenario_run(dry_run=true)` — computes the matrix, writes nothing; **never** for UW verdict or buyer thesis |
 
 ### Apply surface
 
-`apply_scenario_run` writes:
+`scenario_apply` writes:
 
 - `income_strategy` + `financing_profile_id` from the selection
 - run `overrides` money/build fields (e.g. `purchase_price`)
@@ -87,7 +87,7 @@ It does **not** invent fields that were not overridden. It does **not** rewrite 
 
 ### CapEx / OpEx freeze
 
-`create_scenario_run` (and share auto-freeze) copies into `base_inputs`:
+`scenario_run` (and share auto-freeze) copies into `base_inputs`:
 
 - full CapEx BOM (`repair_items` + lines)
 - full OpEx sheet (`opex_items` with `monthly_equiv`)

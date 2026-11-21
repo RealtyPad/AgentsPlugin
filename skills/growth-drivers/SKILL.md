@@ -13,13 +13,14 @@ description: >-
 
 ## Hard rules
 
-- **Never invent.** Every driver needs a real source (`source` + preferably `source_url`). Prefer null / skip over fiction.
+- **Never invent.** Every driver needs a real source (`source` + preferably `source_url`). Prefer null / skip over fiction. A driver from `utility_growth_driver_search` already cites a URL the search returned.
 - **Do not** log “prices are rising” or YoY chips — that is the **`trends`** skill / market **Growth**. Log the **cause** (mall, employer, transit, rezoning, etc.).
 - Prefer **`status=dismissed`** over hard delete when a story goes stale or was wrong.
-- Read existing drivers via `list_deal_growth_factors` (or `get_deal` overview/full) before re-searching; update/dismiss instead of duplicating.
+- Read existing drivers via `deal_item_list(kind=growth_driver)` (or `deal_get` overview/full) before re-searching; update/dismiss instead of duplicating.
+- **Search is read-only; saving is separate.** `utility_growth_driver_search` saves nothing. Save the drivers you keep with `deal_item_upsert(deal_id, kind=growth_driver, source_ids)`.
 - Do **not** set triage status / Status note — that is underwrite/triage.
 - After leaving inbox (`status != new`), deals with **no active** drivers emit soft gap `missing_growth_drivers` (`has_gap=missing_growth_drivers` / Soft gaps queue). Dismissed-only does not clear it — add or reactivate an active driver.
-- **Scope each driver to the area it affects.** A project can matter to one neighborhood, a ZIP, the city, the county or the whole metro. Set `market_id` to the deal's linked market for the **smallest** area it actually affects (`get_deal` → `markets[]`); omit only when unclear. A street-level project is the neighborhood / ZIP; a citywide policy is the city; a regional employer, highway or transit line is the county or metro.
+- **Scope each driver to the area it affects.** A project can matter to one neighborhood, a ZIP, the city, the county or the whole metro. The search tags each driver with its area (`area` = `level:code`, `area_name`) and the save sets `market_id` to the deal's linked market for that area (none when the area is not linked). For drivers you write by hand, set `market_id` to the deal's linked market for the **smallest** area it actually affects (`deal_get` → `markets[]`); omit only when unclear. A street-level project is the neighborhood / ZIP; a citywide policy is the city; a regional employer, highway or transit line is the county or metro.
 - **Automation fact step:** hosted `import` / `research` runs search and grade drivers in code before the planner starts (every linked area searched in parallel, each driver scoped to its area, every driver cites a search-result URL, cached 14 days). The worker only researches drivers when that step found none or the ones logged don't fit this property — dismiss off-target ones rather than deleting.
 - **Ready package (import / research automation):** Hosted `goal=import` and `goal=research` must leave at least one **active** growth driver before `done`. Soft gap stays soft for UW list filters, but when the planner calls `done` with the gap open, a code rail sends the worker to research a growth driver first (once), then the critic done gate decides. Prefer real sourced drivers after trends are fresh — never invent.
 
@@ -27,7 +28,7 @@ description: >-
 
 | Owns | Does not own |
 |------|----------------|
-| Searching + logging qualitative demand signals | Market YoY / `refresh_deal_trends` (`trends`) |
+| Searching + logging qualitative demand signals | Market YoY / `trend_refresh` (`trends`) |
 | Grading strength × direction; dismissing stale items | Money fields / comps / tax (`research`) |
 | Feeding **Drivers** into Overall via CRUD auto-rescore | Status / aggressiveness / buyer gate (`underwrite`) |
 
@@ -45,7 +46,9 @@ Deal-scoped evidence that could move future demand, rents, or values **beyond** 
 
 ## Search playbook
 
-Run after trends are fresh (`ensure_geo_markets` + gap-fill as needed). Use deal address / city / county:
+Run after trends are fresh (`market_ensure` + `trend_refresh` gap-fill as needed).
+
+**Start with `utility_growth_driver_search(deal_id)`** (or `address` with city and state). It searches every area linked to the deal (neighborhood, ZIP, city, county, metro), grades each driver, and returns items with `source_id`, `title`, `category`, `strength`, `direction`, `summary`, `source`, `source_url`, `area`, `as_of`. Use `levels` to keep some areas. Results are cached about 14 days (an empty result an hour): `refresh=true` only when the cache is clearly wrong. Review the items against the deal, then save the ones that fit. Then search by hand only for gaps, using deal address / city / county:
 
 1. **Local news** — “{city} development”, “{employer} relocating {county}”, mall / industrial park announcements.
 2. **City / county planning** — permits, rezoning agendas, CIP / bond packages.
@@ -53,7 +56,7 @@ Run after trends are fresh (`ensure_geo_markets` + gap-fill as needed). Use deal
 4. **Transit / infrastructure** — DOT, transit authority, airport expansions.
 5. **Schools / hospitals / universities** — campus expansions when they move housing demand.
 
-Prefer Firecrawl or allowlisted listing/MCP sources. Respect robots.txt; no ToS-hostile scrapes without approval.
+Prefer Firecrawl or the user’s own MCP sources. Respect robots.txt; no ToS-hostile scrapes without approval.
 
 ## Grading
 
@@ -88,11 +91,11 @@ Growth only → `0.5×Growth` (legacy). Drivers only → `0.25×Drivers`. Growth
 
 ```
 Growth drivers:
-- [ ] 1. `get_deal` core for `score_summary.drivers` + `list_deal_growth_factors`
+- [ ] 1. `deal_get` core for `score_summary.drivers` + `deal_item_list(kind=growth_driver)`
 - [ ] 2. Trends already fresh (or call trends workflow first)
-- [ ] 3. Search news / planning / chamber / infra (cite URLs)
-- [ ] 4. add_deal_growth_factor(s) with title, category, strength, direction, source(+url), as_of, market_id (area it affects)
-- [ ] 5. Dismiss stale/duplicate drivers (status=dismissed)
+- [ ] 3. `utility_growth_driver_search(deal_id)`; then news / planning / chamber / infra by hand for gaps (cite URLs)
+- [ ] 4. Save: `deal_item_upsert(kind=growth_driver, source_ids)` for search items; hand-found drivers as `items` rows with title, category, strength, direction, source(+url), as_of, market_id (area it affects)
+- [ ] 5. Dismiss stale/duplicate drivers (`status=dismissed` on the row's `id`)
 - [ ] 6. Brief: what logged, Drivers score, what still speculative
 ```
 
@@ -100,10 +103,11 @@ Growth drivers:
 
 | Step | Tool |
 |------|------|
-| Load | `get_deal` (core), `list_deal_growth_factors` |
-| Add | `add_deal_growth_factor` / `add_deal_growth_factors` (bulk ≤100) |
-| Update / dismiss | `update_deal_growth_factor` (`status=dismissed`) |
-| Hard delete | `delete_deal_growth_factor` (rare) |
+| Load | `deal_get` (core), `deal_item_list(kind=growth_driver)` (dismissed rows included by default; `include_dismissed=false` hides them) |
+| Search | `utility_growth_driver_search(deal_id \| address, levels?)` (read-only) |
+| Add | `deal_item_upsert(deal_id, kind=growth_driver, source_ids)` for search items, or `items=[{kind: "growth_driver", …}]` for hand-found ones (max 100). All ids are written or none: on `source_expired`, search again |
+| Update / dismiss | `deal_item_upsert(items=[{kind: "growth_driver", id, status: "dismissed"}])` |
+| Hard delete | `deal_item_delete(kind=growth_driver, ids)` (rare) |
 
 **Categories:** `development` | `employer` | `infrastructure` | `policy` | `amenity` | `demographic` | `other`
 

@@ -4,7 +4,7 @@ description: >-
   Core RealtyPad operating manual: mission, pipeline, deal status tree, buyer-
   fit gate, aggressiveness bars, write rules, and the skill index. Use at
   session start, when the user mentions RealtyPad, deals, underwriting,
-  triage, ingest, buyers, distress, CapEx, repairs, or when RealtyPad MCP
+  triage, import, buyers, distress, CapEx, repairs, or when RealtyPad MCP
   tools are available and you need the rules before picking a workflow skill.
 ---
 
@@ -15,11 +15,11 @@ Operating index for RealtyPad MCP agents. Load **one** workflow skill at a time,
 ## How playbooks are organized
 
 1. **This skill** — mission, pipeline, status tree, write rules, and the skill index below.
-2. **Workflow skills** — one per job (`ingest`, `research`, `triage`, …). Each `SKILL.md` holds the full procedure; long detail lives in that skill's `references/`.
+2. **Workflow skills** — one per job (`import`, `research`, `triage`, …). Each `SKILL.md` holds the full procedure; long detail lives in that skill's `references/`.
 3. **Terms** — status, scores, CapEx/OpEx, scenarios, buyer-fit: [glossary](references/glossary.md).
-4. **Portal connector recipes** — [data-source catalog](../ingest/references/data-sources.md), then `../ingest/references/data-sources/<portal>.md`.
+4. **Sources** — listing portals are the `source` parameter of `utility_listing_search`; the table is in the **`import`** skill. There are no per-portal recipes.
 
-Supplementary reference: the RealtyPad docs MCP (`search_docs` with `search_type=keyword`, `read_doc`, `list_docs`) covers product concepts and human-facing pages. The skills are the source of truth for procedures; use docs for background, not as a second playbook.
+Supplementary reference: the RealtyPad docs site (docs.realtypad.ai) covers product concepts and human-facing pages. The skills are the source of truth for procedures; use docs for background, not as a second playbook.
 
 **Rule of thumb:** pick the matching skill → follow that checklist. Do not improvise past the playbook.
 
@@ -27,7 +27,15 @@ Supplementary reference: the RealtyPad docs MCP (`search_docs` with `search_type
 
 - Your MCP session already exposes tools with descriptions — use those for *which* function to call.
 - For *when / why / gotchas*, open the matching workflow skill (index below).
-- If a needed connector or tool is missing from the session, **stop and tell the user** — do not use unrestricted Actors.
+- If a needed tool is missing from the session, **stop and tell the user**. Do not work around it with an unrestricted scraper.
+
+## v2 tool conventions
+
+- **Read with `utility_*`, write by id.** `utility_listing_search`, `utility_listing_get`, `utility_comp_search`, `utility_growth_driver_search`, `utility_property_get`, `utility_material_search` and `utility_image_analyze` only read. They return items with a `source_id`. Pick the items you trust, then write them: `deal_import(source_ids)` creates deals, `deal_item_upsert(deal_id, kind=comp|growth_driver, source_ids)` attaches comps and drivers, `deal_update(deal_id, property_source_id)` fills property facts. An expired id returns `source_expired` and writes nothing: search again.
+- **Writes are batches.** `deal_update(deals[])`, `deal_item_upsert(items[])`, `buyer_upsert`, `comment_create` and most other writes take a list (one item is a list of one). The result is `{requested, succeeded, failed, results[], errors[]}`; one bad row never rejects the rest, so read `errors[]`.
+- **Upsert never deletes.** A row with an id patches only the fields you send; a row without one creates. To replace a table (opex, repair, listing events), `deal_item_delete` the old rows (ids from `deal_item_list`), then `deal_item_upsert` the new ones.
+- **Long runs return a job.** When a call returns `job_id` (or `job.status=running`), poll `job_get(job_id)` until `completed` or `failed`.
+- **Status is a `deal_update` row of its own** (`status`, `rationale`, `score`, `confidence`): never mix it with money or property fields in one row.
 
 ## How to work
 
@@ -52,7 +60,7 @@ You are working for the humans who run RealtyPad — typically matching inventor
 
 Session override **`strict`** (“be conservative”): LTR/STR fallback CF ≳ **~$200/mo** (≈ Economics ~70) or a clearly stronger hold; flip ≳ **$50k**; wholesale ≳ **$40k**.
 
-**Buyer-fit (goal):** economics alone is not enough. After the economic bar → select pursue theses → `match_deal_buyers` → match `ranked` / none fit `passed` / empty book `watch`. Prefer **`advance_deal(dry_run=true)`**. Full tree and distress override: the **`underwrite`** skill + [glossary](references/glossary.md).
+**Buyer-fit (goal):** economics alone is not enough. After the economic bar → select pursue theses → `buyer_match` → match `ranked` / none fit `passed` / empty book `watch`. Prefer **`deal_advance(deal_ids=[…], dry_run=true)`**. Full tree and distress override: the **`underwrite`** skill + [glossary](references/glossary.md).
 
 **Status tree:** hard gap → `blocked`; WIP/gaps → `researching`; below bar → `passed`; economics clear → match buyers → empty book `watch` | fits `ranked` | no fit `passed`.
 
@@ -60,24 +68,23 @@ Session override **`strict`** (“be conservative”): LTR/STR fallback CF ≳ *
 
 **UI copy:** When editing the web app, write for realtors — plain words, no schema field names in labels/helpers/tips.
 
-**Pipeline:** ingest (detail page, not search card) → research (+ trends if stale) → triage → scenarios → underwrite.
+**Pipeline:** import (search → pick → `deal_import`; read the detail, not the search card) → research (+ trends if stale) → triage → scenarios → underwrite.
 
-**Deal load:** `get_deal` defaults to **`view=core`**. Use `list_*` or `view=overview` / `view=full` for nests.
+**Deal load:** `deal_get` defaults to **`view=core`**. Use `deal_item_list(kind)` for one kind of child rows, or `view=overview` / `view=full` for everything.
 
-**Quick Analyze / Auto import:** enqueue via web UI or MCP `create_automation_run` → poll `get_automation_run` (do not block one call). Goal=`import` — research only (no status/`advance_deal`). Existing deal: the same tool with `deal_id` + `goal=research|underwrite` (or `kind` for a single tab refresh). Planner + persona map (Critic/Brief target): `read_doc("agents/automation-planner.md")`.
+**Quick Analyze / Auto import:** enqueue via web UI or MCP `automation_run_create` → poll `automation_run_get` (do not block one call). Goal=`import` — research only (no status/`deal_advance`). Existing deal: the same tool with `deal_id` + `goal=research|underwrite` (or `kind` for a single tab refresh). Planner + persona map (Critic/Brief target): the RealtyPad docs page `agents/automation-planner`.
 
 ## Workflow index
 
 | When | Skill |
 |------|-------|
-| Allowlisted listing connectors (catalog + portal gotchas) | `ingest` → [references/data-sources.md](../ingest/references/data-sources.md) |
-| Sweeps, `add_manual_lead`, **detail page** (write-up, **full gallery**, lat/lng, facts) | `ingest` |
+| Listing sweeps: `utility_listing_search` → `deal_import` by `source_id`; sources and filters; enrich check (write-up, **full gallery**, lat/lng, facts) | `import` |
 | Tax/HOA/rent/ADR/ARV, photos gap-fill, handoffs, **comps** | `research` |
 | Qualitative demand signals (mall, employer, infra) → **Drivers** | `growth-drivers` |
 | Queue batch, Blocking/Soft gaps, shortlist, cluster pass | `triage` |
-| Scenario runs (select/apply decisions); dry-run Preview only via `cashflow_scenarios` | `scenarios` |
-| Verdict, status, UW comment (+ hold projections); prefer **`advance_deal(dry_run=true)`** | `underwrite` |
-| Market snapshots / catalog refresh / projections — **`ensure_geo_markets`** then **`refresh_deal_trends`** (scan / `gap_fill`) | `trends` |
+| Scenario runs (select/apply decisions); dry-run Preview only via `scenario_run(dry_run=true)` | `scenarios` |
+| Verdict, status, UW comment (+ hold projections); prefer **`deal_advance(deal_ids=[…], dry_run=true)`** | `underwrite` |
+| Market snapshots / catalog refresh / projections — **`market_ensure`** then **`trend_get`** (freshness) and **`trend_refresh`** (`gap_fill`) | `trends` |
 | Buyer book, share links, buyer chat (say “investor” only when `buyer_type=investor`) | `buyers` |
 | Auction / REO distress, assign-to-flipper offer stack | `distress` |
 | Land / tear-down / densification residual | `redevelopment` |
@@ -90,7 +97,7 @@ Session override **`strict`** (“be conservative”): LTR/STR fallback CF ≳ *
 |------|------|
 | Enums / narrative layers / score names | [glossary](references/glossary.md) |
 | Dedupe | Street + unit + ZIP5 (`properties.address_key`); listing URL is fallback when ZIP missing. Matches return `deduped: true` |
-| Photos | Full gallery from the **detail page** on ingest; gap-fill via the ingest / research playbooks |
+| Photos | Full gallery from the listing detail on import; gap-fill via the import / research playbooks |
 | Financing default (null profile, at score time) | LTR/STR → `traditional_good`; flip/wholesale/redevelop → `cash_offer` |
 
 ## Auth / tenancy
@@ -109,5 +116,7 @@ Session override **`strict`** (“be conservative”): LTR/STR fallback CF ≳ *
 | Workspace / `tenant_id_fkey` | Reconnect MCP at the correct host above |
 | `Financing profile not found` | Wrong uuid or another tenant’s profile |
 | `Default financing profile missing` | Workspace seed; API may auto-clone defaults on retry |
+| `source_expired` | A `source_id` aged out of the cache: run the `utility_*` search again, then write |
+| `job_id` returned | Long run: poll `job_get(job_id)` |
 
 On failure many tools return `{"error": "..."}` — read the message before retrying.

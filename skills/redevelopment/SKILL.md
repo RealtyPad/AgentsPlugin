@@ -26,10 +26,10 @@ Land lots without a house: use `property_type=other` plus `lot_size_acres` and z
 
 ### Teardown / land-value listings: condition decides the strategies
 
-When the listing says **tear down**, **lot / land value**, or **uninhabitable** (`qa_flags.teardown_signals`) and the photos agree, the existing house is not a rental or a flip:
+When the listing says **tear down**, **lot / land value**, or **uninhabitable** (`uw_check(checks=["qa_flags"])` → `teardown_signals`) and the photos agree, the existing house is not a rental or a flip:
 
 - Narrow **`strategy_intent` to `[redevelop]`** (add `wholesale` only for an assign-to-builder thesis). Remove `ltr` / `str` / `fix_flip`.
-- Do **not** fill rent, ADR, or a renovated flip ARV just to clear a blocking gap. If they were filled that way, clear them (`update_deal` with null).
+- Do **not** fill rent, ADR, or a renovated flip ARV just to clear a blocking gap. If they were filled that way, clear them (`deal_update` with null).
 - Pick one exit thesis and make the numbers match it:
   - **Land play** (sell or hold the lot): `arv` = **land value** — lot / teardown sale comps, or the **land portion** of the assessment. Not the total as-is appraisal, which still counts the house. Budget = demo + site.
   - **Build** (new construction): `arv` = **new-build value** from nearby new-construction sale comps. The budget must include **construction** as well as demo + site, priced as repair items from sourced local $/sqft ranges (the **`cost-estimate`** skill).
@@ -59,7 +59,7 @@ ARV method order still applies in hosted fill, but for redevelop an appraisal-ba
 
 ## Status / buyers
 
-Same pipeline as other investment strategies: clear economics → `match_deal_buyers` → `ranked` / `watch` / `passed`. Hard zoning gaps → `blocked` or stay `researching` with an `action_needed` handoff.
+Same pipeline as other investment strategies: clear economics → `buyer_match` → `ranked` / `watch` / `passed`. Hard zoning gaps → `blocked` or stay `researching` with an `action_needed` handoff.
 
 ## Do not
 

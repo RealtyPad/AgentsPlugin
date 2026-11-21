@@ -17,8 +17,8 @@ Evidence-only recurring operating expenses. **Never invent line items.** Seed fr
 
 | Bucket | Persist how | Feeds | Never | UI label |
 |--------|-------------|-------|-------|----------|
-| **Recurring OpEx** | `add_deal_opex_item(s)` | `monthly_opex_total` → monthly CF | Day-0 rehab BOM; invent rates | **Monthly costs** |
-| **Acquisition CapEx** | `add_deal_repair_item(s)` via the **`cost-estimate`** skill | `repair_estimate` → `cash_in` | Bump into OpEx / `maintenance_pct` | **Fix-up costs** |
+| **Recurring OpEx** | `deal_item_upsert(kind=opex)` | `monthly_opex_total` → monthly CF | Day-0 rehab BOM; invent rates | **Monthly costs** |
+| **Acquisition CapEx** | `deal_item_upsert(kind=repair)` via the **`cost-estimate`** skill | `repair_estimate` → `cash_in` | Bump into OpEx / `maintenance_pct` | **Fix-up costs** |
 
 CapEx playbook stays in **cost-estimate**. This workflow owns **Monthly costs** only.
 
@@ -29,8 +29,8 @@ CapEx playbook stays in **cost-estimate**. This workflow owns **Monthly costs** 
 - **Never** put day-0 rehab (paint, roof, kitchen) into OpEx — that is CapEx / cost-estimate.
 - **Never** duplicate the hard-coded STR **20% platform fee** already in `str_v1` as an opex line.
 - Scope by trigger `income_strategies`, else deal `strategy_intent`, else active `income_strategy`. Owner-occ (`deal_purpose=primary`) has no Expenses OpEx path — skip.
-- Prefer **`list_deal_opex_items`** before writing; avoid duplicate name+category+scope.
-- Optional starters: `get_uw_cost_defaults().opex_templates` + `default_avg_stay_nights` for per-turnover math.
+- Prefer **`deal_item_list(kind=opex)`** before writing; avoid duplicate name+category+scope.
+- Optional starters: `uw_default_get().opex_templates` + `default_avg_stay_nights` for per-turnover math.
 - Writes roll into `deals.monthly_opex_total` and rescore CF.
 
 ## Strategy scope (LTR vs STR)
@@ -45,10 +45,10 @@ CapEx playbook stays in **cost-estimate**. This workflow owns **Monthly costs** 
 
 ```
 Monthly costs (OpEx):
-- [ ] 1. get_deal + list_deal_opex_items — existing lines + strategy focus
-- [ ] 2. get_uw_cost_defaults — opex_templates, default_avg_stay_nights
+- [ ] 1. deal_get + deal_item_list(kind=opex) — existing lines + strategy focus
+- [ ] 2. uw_default_get — opex_templates, default_avg_stay_nights
 - [ ] 3. Evidence search (Firecrawl / local rates) only when a line needs a quote
-- [ ] 4. Persist via add_deal_opex_item(s) (replace_all only when rewriting stubs)
+- [ ] 4. Persist via `deal_item_upsert` rows with `kind=opex` (to rewrite stubs: `deal_item_delete` them first)
 - [ ] 5. Confirm monthly_opex_total / rescore; note gaps in research comment if thin
 ```
 
@@ -56,17 +56,16 @@ Monthly costs (OpEx):
 
 | Tool | Use |
 |------|-----|
-| `list_deal_opex_items` | Read current lines + rollup |
-| `add_deal_opex_item` | One line |
-| `add_deal_opex_items` | Bulk (max 100); `replace_all=true` for full rewrite |
-| `update_deal_opex_item` / `delete_deal_opex_item` | Edit / remove |
-| `get_uw_cost_defaults` | Workspace templates + default avg stay nights |
+| `deal_item_list(deal_id, kind=opex)` | Read current lines + roll-up (`summary.monthly_opex_total`) |
+| `deal_item_upsert(deal_id, items=[{kind: "opex", …}])` | Create lines (max 100 per call); a row with `id` patches only the fields you send |
+| `deal_item_delete(deal_id, kind=opex, ids)` | Remove lines; to rewrite the whole sheet, delete the ids then upsert the new rows |
+| `uw_default_get` | Workspace templates + default avg stay nights |
 
 **Fields:** `name` (required); `frequency` = `daily` \| `weekly` \| `biweekly` \| `monthly` \| `annual` \| `per_turnover` \| `pct_of_rent`; `amount` (required unless `pct_of_rent`); `basis_pct` when `pct_of_rent`; `turns_per_month` for turnover math; `category` (`cleaning`, `utilities`, `supplies`, `pm`, `capex_reserve`, …); `income_strategy_scope` = `ltr` \| `str` \| `both`; `source_url` / `notes` when known.
 
 ## Hosted tab research
 
-Expenses → **Monthly costs** → **Research monthly costs** enqueues a refresh automation (`kind=opex`); the worker follows this playbook and saves with `add_deal_opex_item(s)`.
+Expenses → **Monthly costs** → **Research monthly costs** enqueues a refresh automation (`kind=opex`); the worker follows this playbook and saves with `deal_item_upsert(kind=opex)`.
 
 ## See also
 
