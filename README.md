@@ -4,7 +4,7 @@ Convenience package so Claude, Cursor, and ChatGPT can install RealtyPad **skill
 
 Plugin id is `realtypad` (lowercase, required by Agent Plugins / Claude / Cursor). In Claude Code that installs as `/plugin install realtypad@realtypad`.
 
-**This repo is the source of truth for RealtyPad agent playbooks.** Each workflow is a full [Agent Skill](https://agentskills.io/): `SKILL.md` holds the procedure and hard rules, and long detail lives in that skill's `references/`. The same files serve external agents (Claude, Cursor, ChatGPT/Codex) and RealtyPad's hosted automation worker. RealtyPad docs (`search_docs` / `read_doc` on the MCP) are supplementary reference, not a second playbook.
+**This repo is the source of truth for RealtyPad agent playbooks.** Each workflow is a full [Agent Skill](https://agentskills.io/): `SKILL.md` holds the procedure and hard rules, and long detail lives in that skill's `references/`. The same files serve external agents (Claude, Cursor, ChatGPT/Codex) and RealtyPad's hosted automation worker. RealtyPad docs (docs.realtypad.ai) are supplementary reference, not a second playbook.
 
 MCP URL (no trailing slash): `https://app.realtypad.ai/mcp`  
 Stage: `https://stage.realtypad.ai/mcp`

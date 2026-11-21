@@ -4,6 +4,10 @@
 
 Skills move to the RealtyPad MCP v2 tool surface (ADR-0011, epic DEV-758; issue DEV-768). Use this release with the v2 connector. v1 tool names no longer appear in any skill.
 
+### Why a minor bump
+
+0.3.0 is a minor bump (not a patch) because a skill is renamed (`ingest` → `import`) and every tool name changes to the v2 surface: this is a breaking change for anything that loads or names the old skill or tools.
+
 ### Renamed
 
 - **Skill `ingest` is now `import`** (`realtypad:ingest` → `realtypad:import`). Use "import" everywhere; the skill directory, `name` and every cross-reference changed. Anything that loads `realtypad:ingest` by name must load `realtypad:import`.

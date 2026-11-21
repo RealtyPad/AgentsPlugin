@@ -84,6 +84,8 @@ RealtyPad MCP tools (same API as the hosted app):
 | Notes | `comment_create` (research brief / findings); `observation_upsert` **only** for `kind=action_needed` next-agent todos; the same tool with `resolved=true` when one is handled |
 | Photos | `deal_item_upsert` rows with `kind=attachment` (gallery) / `deal_item_delete(kind=attachment)` |
 
+**Write shapes:** hand-collected rows go in `items`, with `kind` on each row (`deal_item_upsert(deal_id, items=[{kind: "listing_event", event_at: "2026-03-02", event_kind: "price_change", ask_price: 389000, listing_type: "sale", source_url: "https://…"}])`). Search results are saved by id instead: `deal_item_upsert(deal_id, source_ids=[…])`, with the optional top-level `kind` only as a guard that every id is that kind.
+
 **Comps:** discover with `utility_comp_search`, review the items, then save the ones you trust with `deal_item_upsert(deal_id, kind=comp, source_ids=[…])`. Nothing is saved by the search. Web search and Firecrawl comps you find yourself are saved as `kind=comp` rows (`items[]`). Hosted Quick Analyze and the Comps-tab **Research comps** run an automation that finds and saves comps; that path is intentional.
 
 **Strategy scope (cost-critical):** Only search comps kinds implied by **`strategy_intent`** when set, else active **`income_strategy`** (owner-occ `primary` → rent+STR+sale). Map: LTR → `rent`; STR → `str`; flip/wholesale/redevelop → `sale`. Empty investment focus defaults to **rent only** — never “search everything.” Land/tear-down theses: the **`redevelopment`** skill — when the `qa_flags` check (`uw_check`) shows `teardown_signals`, the condition decides the strategies (redevelop only; no rent / flip ARV just to clear gaps).
@@ -108,8 +110,8 @@ Comps carry their hero `image_url`, `property_type` and size from the search; ke
 
 | Bucket | Persist how | Feeds | Never |
 |--------|-------------|-------|-------|
-| **Acquisition CapEx** | `deal_item_upsert(kind=repair)` via the **`cost-estimate`** skill (scalar only if no items) | `repair_estimate` → `cash_in`; sets `needs_rehab` | Invent into OpEx / bump `maintenance_pct` |
-| **Recurring OpEx** | `deal_item_upsert(kind=opex)` via the **`opex`** skill | `monthly_opex_total` → monthly CF | Day-0 rehab BOM |
+| **Acquisition CapEx** | `deal_item_upsert(items=[{kind: "repair", …}])` via the **`cost-estimate`** skill (scalar only if no items) | `repair_estimate` → `cash_in`; sets `needs_rehab` | Invent into OpEx / bump `maintenance_pct` |
+| **Recurring OpEx** | `deal_item_upsert(items=[{kind: "opex", …}])` via the **`opex`** skill | `monthly_opex_total` → monthly CF | Day-0 rehab BOM |
 
 **Never** use `maintenance_pct` / `insurance_annual` as a blended CapEx or OpEx proxy. Do not add a line that duplicates the hard-coded STR 20% platform fee. Soft gap: `needs_rehab` + null estimate → `repairs_unknown` — flag it; do not invent OpEx. CapEx is **not** subtracted from monthly LTR/STR CF, but **is** in `cash_in` (down + repairs) when set. When repair items exist, they own `repair_estimate` (scalar patches ignored).
 

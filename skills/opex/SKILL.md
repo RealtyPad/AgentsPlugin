@@ -17,8 +17,8 @@ Evidence-only recurring operating expenses. **Never invent line items.** Seed fr
 
 | Bucket | Persist how | Feeds | Never | UI label |
 |--------|-------------|-------|-------|----------|
-| **Recurring OpEx** | `deal_item_upsert(kind=opex)` | `monthly_opex_total` → monthly CF | Day-0 rehab BOM; invent rates | **Monthly costs** |
-| **Acquisition CapEx** | `deal_item_upsert(kind=repair)` via the **`cost-estimate`** skill | `repair_estimate` → `cash_in` | Bump into OpEx / `maintenance_pct` | **Fix-up costs** |
+| **Recurring OpEx** | `deal_item_upsert(items=[{kind: "opex", …}])` | `monthly_opex_total` → monthly CF | Day-0 rehab BOM; invent rates | **Monthly costs** |
+| **Acquisition CapEx** | `deal_item_upsert(items=[{kind: "repair", …}])` via the **`cost-estimate`** skill | `repair_estimate` → `cash_in` | Bump into OpEx / `maintenance_pct` | **Fix-up costs** |
 
 CapEx playbook stays in **cost-estimate**. This workflow owns **Monthly costs** only.
 
@@ -61,11 +61,20 @@ Monthly costs (OpEx):
 | `deal_item_delete(deal_id, kind=opex, ids)` | Remove lines; to rewrite the whole sheet, delete the ids then upsert the new rows |
 | `uw_default_get` | Workspace templates + default avg stay nights |
 
+Example (mixed kinds are allowed; `kind` goes on each row, never at the top level):
+
+```
+deal_item_upsert(deal_id, items=[
+  {kind: "opex", name: "Turnover cleaning", category: "cleaning", frequency: "per_turnover", amount: 140, turns_per_month: 6, income_strategy_scope: "str"},
+  {kind: "opex", name: "Property management", category: "pm", frequency: "pct_of_rent", basis_pct: 8, income_strategy_scope: "ltr"}
+])
+```
+
 **Fields:** `name` (required); `frequency` = `daily` \| `weekly` \| `biweekly` \| `monthly` \| `annual` \| `per_turnover` \| `pct_of_rent`; `amount` (required unless `pct_of_rent`); `basis_pct` when `pct_of_rent`; `turns_per_month` for turnover math; `category` (`cleaning`, `utilities`, `supplies`, `pm`, `capex_reserve`, …); `income_strategy_scope` = `ltr` \| `str` \| `both`; `source_url` / `notes` when known.
 
 ## Hosted tab research
 
-Expenses → **Monthly costs** → **Research monthly costs** enqueues a refresh automation (`kind=opex`); the worker follows this playbook and saves with `deal_item_upsert(kind=opex)`.
+Expenses → **Monthly costs** → **Research monthly costs** enqueues a refresh automation (`kind=opex`); the worker follows this playbook and saves with `deal_item_upsert(items=[{kind: "opex", …}])`.
 
 ## See also
 

@@ -16,8 +16,8 @@ Evidence-only CapEx. **Never invent line items.** Materials come from `utility_m
 
 | Bucket | Persist how | Feeds | Never | UI label |
 |--------|-------------|-------|-------|----------|
-| **Acquisition CapEx** | `deal_item_upsert(kind=repair)` (scalar `repair_estimate` only if no items) | `repair_estimate` → `cash_in`; sets `needs_rehab` | Invent into OpEx / bump `maintenance_pct` | **Fix-up costs** |
-| **Recurring OpEx** | `deal_item_upsert(kind=opex)` — see the **`opex`** skill | `monthly_opex_total` → monthly CF | Day-0 rehab BOM | **Monthly costs** |
+| **Acquisition CapEx** | `deal_item_upsert(items=[{kind: "repair", …}])` (scalar `repair_estimate` only if no items) | `repair_estimate` → `cash_in`; sets `needs_rehab` | Invent into OpEx / bump `maintenance_pct` | **Fix-up costs** |
+| **Recurring OpEx** | `deal_item_upsert(items=[{kind: "opex", …}])` — see the **`opex`** skill | `monthly_opex_total` → monthly CF | Day-0 rehab BOM | **Monthly costs** |
 
 Soft gap: `needs_rehab` + null estimate → `repairs_unknown` — flag it; do not invent OpEx to clear it. When items exist, they own `repair_estimate` (scalar patches ignored).
 
@@ -25,7 +25,7 @@ Soft gap: `needs_rehab` + null estimate → `repairs_unknown` — flag it; do no
 
 ## Hard rules
 
-- Persist **structured** CapEx with `deal_item_upsert(kind=repair)` rows — not markdown BOM tables as source of truth.
+- Persist **structured** CapEx with `deal_item_upsert(items=[{kind: "repair", …}])` rows — not markdown BOM tables as source of truth.
 - Writes auto-sum item `line_total`s onto `deals.repair_estimate` and set `needs_rehab=true` when items exist.
 - Recurring reserves for future CapEx belong on **OpEx** (`kind=opex`, category `capex_reserve`) — distinct from acquisition `repair_estimate`. Full OpEx: the **`opex`** skill.
 - **Never** use `maintenance_pct` / `insurance_annual` as a blended CapEx or OpEx proxy.
@@ -44,7 +44,7 @@ Cost estimate:
 - [ ] 2. Scope line items from evidence (listing write-up, `utility_image_analyze(capex)`: paint, fence, deck, …) — skip inventing systems
 - [ ] 3. Materials: `utility_material_search(query, zip_code)` per scope item
 - [ ] 4. Labor/project ranges: web search Angi/Homewyse/Fixr (national OK; note geo)
-- [ ] 5. Persist with `deal_item_upsert(kind=repair)` rows and nested `lines` (replace = delete then upsert)
+- [ ] 5. Persist with `deal_item_upsert(items=[{kind: "repair", …}])` rows and nested `lines` (replace = delete then upsert)
 - [ ] 6. Optional `comment_create` for confidence/narrative; `deal_item_list(kind=repair)` to confirm the roll-up
 ```
 

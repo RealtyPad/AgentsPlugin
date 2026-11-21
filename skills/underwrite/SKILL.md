@@ -114,7 +114,7 @@ RealtyPad MCP tools (same API as the hosted app):
 |------|------|
 | Load | `deal_get` (core; `view=full` rare), `comment_list`, `deal_item_list(kind=comp)`, `scenario_get`, `deal_item_list(kind=opex)` |
 | **Pipeline (prefer)** | **`deal_advance`** (`dry_run=true` first) — gaps → economic grid candidates → buyer-first thesis → proposed/applied status |
-| Money / profile / copy | `deal_update` (auto-rescored; money only — no status/rationale; prefer research workflow for bulk field fills); OpEx lines via `deal_item_upsert(kind=opex)` |
+| Money / profile / copy | `deal_update` (auto-rescored; money only — no status/rationale; prefer research workflow for bulk field fills); OpEx lines via `deal_item_upsert(items=[{kind: "opex", …}])` |
 | Scenario matrix | the **`scenarios`** skill / `scenario_run` → `scenario_select` → `scenario_apply` — **never** `scenario_run(dry_run=true)` for a verdict (Preview only, saves nothing) |
 | Hold projection | `scenario_project` (ltr/str dry-run; growth: Prophet/OLS → YoY → 0%; optional `growth_schedule` for staged rates; optional `scenario_run_id`) |
 | Market trajectory | `trend_get` (Prophet/OLS; after trends refresh; prefer `series=` + `include_projected=false`; check `fit_quality`) |

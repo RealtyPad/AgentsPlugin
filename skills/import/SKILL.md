@@ -83,3 +83,12 @@ Do **not** treat a Zestimate as rent or ARV. Default status for a new lead is `n
 - Brief: created and deduped counts, 2–3 standouts, anything still card-only.
 - **Standouts by aggressiveness** (the **`realtypad`** skill): LTR/STR → distress or positive yield worth a watch; flip/wholesale → only clear asymmetry.
 - **Stop.** Next steps are the **`research`**, **`triage`** or **`underwrite`** skill, only if the user asks.
+
+Example gap-fill call (`kind` goes on each row inside `items`):
+
+```
+deal_item_upsert(deal_id, items=[
+  {kind: "attachment", source_url: "https://…/photo1.jpg", category: "listing", is_primary: true},
+  {kind: "listing", source_url: "https://www.zillow.com/homedetails/…"}
+])
+```
