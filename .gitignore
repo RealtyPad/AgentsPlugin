@@ -7,3 +7,6 @@
 
 # Local Codex project config (TOML is not allowed in the plugin directory)
 .codex/
+
+# Local scratch and Dev worktrees (SDLC Development runs)
+.tmp/
