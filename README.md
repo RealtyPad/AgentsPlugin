@@ -7,7 +7,6 @@ Plugin id is `realtypad` (lowercase, required by Agent Plugins / Claude / Cursor
 **This repo is the source of truth for RealtyPad agent playbooks.** Each workflow is a full [Agent Skill](https://agentskills.io/): `SKILL.md` holds the procedure and hard rules, and long detail lives in that skill's `references/`. The same files serve external agents (Claude, Cursor, ChatGPT/Codex) and RealtyPad's hosted automation worker. RealtyPad docs (`search_docs` / `read_doc` on the MCP) are supplementary reference, not a second playbook.
 
 MCP URL (no trailing slash): `https://app.realtypad.ai/mcp`  
-Stage: `https://stage.realtypad.ai/mcp`
 
 Auth is browser OAuth in the client. This repo does not ship secrets.
 
