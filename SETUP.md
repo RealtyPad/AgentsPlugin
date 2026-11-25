@@ -41,9 +41,8 @@ Your workspace is determined entirely by the OAuth session. Claude cannot infer 
 - **Claude Code:** run `/mcp`, select `realtypad`, and use the authentication options to re-authenticate or clear authentication. Uninstalling the plugin removes the server configuration.
 - **Cowork:** sign out or back in from the plugin's connector page; uninstall the plugin to remove the connector.
 
-## Stage and local development
+## Local development
 
-- **Stage MCP:** `https://stage.realtypad.ai/mcp` (same OAuth flow; use only when explicitly testing against stage).
 - **Local API:** override the client MCP URL to `http://localhost:8000/mcp`. Do not commit tokens. Cursor cloud against localhost may need `mcp-remote`; see RealtyPad `docs/user/cursor-mcp.md`.
 
 After any URL override, re-run OAuth if the client prompts for it.

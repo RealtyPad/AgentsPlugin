@@ -95,8 +95,7 @@ Session override **`strict`** (“be conservative”): LTR/STR fallback CF ≳ *
 
 ## Auth / tenancy
 
-- Production MCP: `https://app.realtypad.ai/mcp`
-- Stage MCP: `https://stage.realtypad.ai/mcp`
+- MCP: `https://app.realtypad.ai/mcp`
 - Reconnect OAuth if you see workspace / `tenant_id_fkey` errors.
 - All tools are tenant-scoped after Bearer OAuth.
 - Never invent ADR/ARV/rent — skip with `missing_adr` / `missing_arv` / etc.
